@@ -1,6 +1,6 @@
 {
   "name": "Estoque de Produção",
-  "short_name": "Estoque",
+  "short_name": "Produção",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",

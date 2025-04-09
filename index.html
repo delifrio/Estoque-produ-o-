@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#000000" />
+  <title>Estoque de Produção</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #222;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .item span {
+      flex: 1;
+    }
+    .buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .buttons button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .buttons button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>Estoque de Produção</h1>
+  <div id="estoque"></div>
+
+  <script>
+    const itens = [
+      "lasanha de frango",
+      "lasanha de carne",
+      "estrogonofe de frango",
+      "estrogonofe de carne",
+      "escondidinho de charque",
+      "escondidinho de camarão"
+    ];
+
+    function carregarEstoque() {
+      const container = document.getElementById("estoque");
+      container.innerHTML = "";
+      itens.forEach((item) => {
+        const quantidade = localStorage.getItem(item) || 0;
+        const div = document.createElement("div");
+        div.className = "item";
+
+        const nome = document.createElement("span");
+        nome.textContent = item;
+
+        const qtd = document.createElement("span");
+        qtd.textContent = quantidade;
+        qtd.id = `qtd-${item}`;
+        qtd.style.color = quantidade <= 7 ? "lime" : "red";
+        qtd.style.textAlign = "center";
+
+        const botoes = document.createElement("div");
+        botoes.className = "buttons";
+
+        const btnAdd = document.createElement("button");
+        btnAdd.textContent = "+";
+        btnAdd.style.backgroundColor = "#0a0";
+        btnAdd.onclick = () => atualizar(item, 1);
+
+        const btnRem = document.createElement("button");
+        btnRem.textContent = "-";
+        btnRem.style.backgroundColor = "#a00";
+        btnRem.onclick = () => atualizar(item, -1);
+
+        botoes.appendChild(btnAdd);
+        botoes.appendChild(btnRem);
+
+        div.appendChild(nome);
+        div.appendChild(qtd);
+        div.appendChild(botoes);
+
+        container.appendChild(div);
+      });
+    }
+
+    function atualizar(item, delta) {
+      let valor = parseInt(localStorage.getItem(item)) || 0;
+      valor = Math.max(0, valor + delta);
+      localStorage.setItem(item, valor);
+      const qtd = document.getElementById(`qtd-${item}`);
+      qtd.textContent = valor;
+      qtd.style.color = valor <= 7 ? "lime" : "red";
+    }
+
+    window.onload = carregarEstoque;
+  </script>
+</body>
+</html>
